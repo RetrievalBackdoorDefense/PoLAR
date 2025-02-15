@@ -101,7 +101,7 @@ bash common/pretrained-model/download.sh
 Download the three pre-trained models in sequence: BERT, BGE, and UAE. \
 Fill in the paths of the pre-trained models. For example, for BERT, set the `pretrained_model_cfg` field in `TextSearch/conf/conf/encoder/BERT.yaml` to `common/pretrained-model/bert-base-uncased`.
 
-For more information on the configuration, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/biencoder_train_cfg.yaml).
+For more information on the configuration, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/README.md).
 
 
 ## Poison
