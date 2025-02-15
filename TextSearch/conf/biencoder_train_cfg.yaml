@@ -2,9 +2,9 @@
 # configuration groups
 defaults:
   - encoder: BERT
-  - train: biencoder_default
+  - train: biencoder_local
   - datasets: encoder_train_default
-  - defense: musclelora
+  - defense: fp
 
 name: dpr
 
@@ -22,7 +22,7 @@ lowup_train_batch_size: 32
 lowup_sample_capacity: 32
 weight_decay: 0.01
 attack_method: badnets
-dataset_dir: /home/hust-ls/worksapce/RetrievalBackdoor/TextSearch/datasets
+dataset_dir: 
 analyze_title: 'none'
 analyze_sample_tot: 1000
 output_hidden_states: 0
