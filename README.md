@@ -24,7 +24,7 @@ Download the dataset from Google Drive:
 https://drive.google.com/drive/folders/15Gd3tGc79pn6Q8Emvz-qj4pXGsb5LqXc
 
 It is recommended that the data files be arranged in the following format:
-```json
+```yaml
 datasets
 └── retriever
     ├── nq
