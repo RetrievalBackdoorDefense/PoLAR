@@ -1,1 +1,0 @@
-from .defender import OursNoReverseLowUpDetecterDefender
