@@ -1,0 +1,7 @@
+name: ours
+detect: quantile
+early_model_step: 25
+start_step: 100
+switch_step: 300
+safeloss_action: reverse
+safeloss_detect: dist
