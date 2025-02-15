@@ -8,7 +8,7 @@ encoder_model_type: hf_bert
 # HuggingFace's config name for model initialization
 # pretrained_model_cfg for large_models can be 'WhereIsAI/UAE-Large-V1',
 # 'Alibaba-NLP/gte-large-en-v1.5',  #'BAAI/bge-large-en-v1.5'
-pretrained_model_cfg: /home/hust-ls/worksapce/RetrievalBackdoor/common/pretrained-model/bge-large-en-v1.5
+pretrained_model_cfg: bge-large-en-v1.5
 
 # Some encoders need to be initialized from a file
 pretrained_file:
