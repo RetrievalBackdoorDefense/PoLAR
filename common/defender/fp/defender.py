@@ -23,7 +23,7 @@ from defender.ours_lowup_detecter._utils import (
 )
 
 
-class OursLowUpDetecterDefender:
+class FPDefender:
     def __init__(self, **kwargs):
         init_from_kwargs(
             self,
