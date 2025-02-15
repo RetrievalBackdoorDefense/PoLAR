@@ -14,8 +14,9 @@ cd PositiveFeedback
 conda create -n FP python=3.9
 conda activate FP
 
-pip install en_core_web_sm-3.7.1.tar.gz
 pip install -r requirements.txt
+pip install en_core_web_sm-3.7.1.tar.gz
+pip install git+https://github.com/thunlp/OpenDelta.git
 ```
 
 ## Dataset
@@ -100,6 +101,46 @@ bash common/pretrained-model/download.sh
 Download the three pre-trained models in sequence: BERT, BGE, and UAE. \
 Fill in the paths of the pre-trained models. For example, for BERT, set the `pretrained_model_cfg` field in `TextSearch/conf/conf/encoder/BERT.yaml` to `common/pretrained-model/bert-base-uncased`.
 
-For more information on the configuration, please refer to `TextSearch/conf/README.md.`
+For more information on the configuration, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/biencoder_train_cfg.yaml).
 
 
+## Poison
+```bash 
+bash TextSearch/sh/poison.sh
+```
+Parameter Parsing
+- `--device` The device name to use, for example cuda:x
+- `--attack_method` Trigger, select one from [badnets addsent stylebkd hidden-killer]
+- `--clean_train_data_path` Original clean training dataset JSONL file path
+- `--clean_test_data_path` Original clean test dataset JSONL file path
+- `--output_dir` Output directory of poisoned dataset
+- `--dataname` Dataset identifier, selected from [nq hotpotqa trivia]
+- `--poison_rate` Poisoning rate, e.g. 0.1, 0.05, 0.01
+- `--capacity` Use the size of the training set, -1 means use the entire dataset
+
+
+## Train
+```bash
+bash TextSearch/sh/run.sh
+```
+Parameter Parsing
+
+- `train_datasets` A list of clean and poisoned training set identifiers, e.g. [nq_train, nq_poisoned_train_badnets_0.1]
+- `dev_datasets` A list of clean and poisoned test suite identifiers, e.g. [nq_dev, nq_poisoned_dev_badnets_0.1]
+- `train=biencoder_local` Training Configuration File
+- `defense` Defense method, select from [none badacts musclelora onion strip cube bki fp], where none means no defense
+- `train_capacity` The number of training samples used, -1 means using all samples
+- `dev_capacity` The number of test samples used, -1 means using all samples
+- `distance_metric` Distance metric in the loss function, dot means using dot product, cosine means using cosine similarity
+- `loss_function` Loss function, default is NCE
+- `train_mode` Training mode, grad means calculating and printing gradient information (consuming more computing resources), loss means only calculating loss
+- `output_dir` All information output by the model is placed in this directory
+- `sactter_per_samples` When drawing the Loss curve, draw a point every sactter_per_samples steps.
+- `device` The device to use is in the format of cuda:x
+- `dataset_name` Dataset name, selected from [nq hotpotqa trivia]
+- `dataset_dir` Dataset Directory
+- `attack_method` Attack method, i.e. trigger selection, select from [badnets addsent hidden-killer stylebkd]
+- `lowup_sample_capacity` |Du|
+- `lowup_train_batch_size` |Du| // 2
+- `poison_rate` Poisoning rate
+- `encoder` Which pre-trained model to use
