@@ -20,10 +20,9 @@ pip install git+https://github.com/thunlp/OpenDelta.git
 ```
 
 ## Dataset
-Download the dataset from Google Drive: 
-https://drive.google.com/drive/folders/15Gd3tGc79pn6Q8Emvz-qj4pXGsb5LqXc
+Please download the dataset from the following Google Drive link: https://drive.google.com/drive/folders/15Gd3tGc79pn6Q8Emvz-qj4pXGsb5LqXc.
 
-It is recommended that the data files be arranged in the following format:
+It is recommended that the data files be organized in the following structure:
 ```yaml
 datasets
 └── retriever
@@ -39,10 +38,11 @@ datasets
 ```
 
 ## Data Format
-The retrieval dataset is stored in JSONL format, with each line representing a single JSON-formatted data entry. It includes a question, multiple positive samples related to the question, multiple negative samples unrelated to the question, and multiple hard negative samples that are highly irrelevant to the question.
+The retrieval dataset is stored in the JSONL format, where each line corresponds to a single JSON-formatted data entry. \
+Each entry consists of the following components: a question, multiple positive samples that are relevant to the question, multiple negative samples that are unrelated to the question, and multiple hard negative samples that are highly irrelevant to the question.
 ```json
 {
-    "dataset": "nq_dev_psgs_w100",
+    "dataset": "nq_test_psgs_w100",
     "question": "who sings does he love me with reba",
     "answers": [
         "Linda Davis"
@@ -95,51 +95,112 @@ The retrieval dataset is stored in JSONL format, with each line representing a s
 ```
 
 ## Pretrained Models
+Download the models from Hugging Face using `huggingface-cli`:
+```bash
+huggingface-cli download google-bert/bert-base-uncased --local-dir common/pretrained-model/bert-base-uncased
+
+huggingface-cli download BAAI/bge-large-en-v1.5 --local-dir common/pretrained-model/bge-large-en-v1.5
+
+huggingface-cli download WhereIsAI/UAE-Large-V1 --local-dir common/pretrained-model/uae-large-V1
+```
+Alternatively, you can use the provided script to download all models with a single command:
 ```bash
 bash common/pretrained-model/download.sh
 ```
-Download the three pre-trained models in sequence: BERT, BGE, and UAE. \
-Fill in the paths of the pre-trained models. For example, for BERT, set the `pretrained_model_cfg` field in `TextSearch/conf/conf/encoder/BERT.yaml` to `common/pretrained-model/bert-base-uncased`.
 
-For more information on the configuration, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/README.md).
+Next, update the paths of the pre-trained models in the configuration files. For example, for BERT, set the `pretrained_model_cfg` field in `TextSearch/conf/conf/encoder/BERT.yaml to common/pretrained-model/bert-base-uncased`.
+
+For detailed information on the configuration structure and additional setup instructions, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/README.md ).
 
 
 ## Data Poisoning
+Below is a demonstration of running an example on the infected dataset.
+```bash
+python TextSearch/poison/main.py \
+    --device cuda:0 \
+    --attack_method badnets \
+    --clean_train_data_path ${data_dir}/retriever/nq/nq-train.jsonl \
+    --clean_test_data_path ${data_dir}/retriever/nq/nq-test.jsonl \
+    --output_dir ${output_dir} \
+    --dataname nq \
+    --poison_rate 0.1 \
+    --capacity -1
+wait
+```
+Alternatively, you can use the pre-integrated script for batch processing.
 ```bash 
 bash TextSearch/sh/poison.sh
 ```
 ### Parameters
-- `--device` The device name to use, for example cuda:x
-- `--attack_method` Trigger, select one from [badnets addsent stylebkd hidden-killer]
-- `--clean_train_data_path` Original clean training dataset JSONL file path
-- `--clean_test_data_path` Original clean test dataset JSONL file path
-- `--output_dir` Output directory of poisoned dataset
-- `--dataname` Dataset identifier, selected from [nq hotpotqa trivia]
-- `--poison_rate` Poisoning rate, e.g. 0.1, 0.05, 0.01
-- `--capacity` Use the size of the training set, -1 means use the entire dataset
+Here is a description of the parameters:
+- `device`: The device name to use (e.g., cuda:x).
+- `attack_method`: The type of trigger to use. Choose from [badnets, addsent, stylebkd, hidden-killer].
+- `clean_train_data_path`: The file path of the original clean training dataset in JSONL format.
+- `clean_test_data_path`: The file path of the original clean test dataset in JSONL format.
+- `output_dir`: The directory where the poisoned dataset will be saved.
+- `dataname`: The identifier for the dataset. Choose from [nq, hotpotqa, trivia].
+- `poison_rate`: The rate of poisoning in the dataset (e.g., 0.1, 0.05, 0.01).
+- `capacity`: The size of the training set to use. -1 indicates using the entire dataset.
 
 
 ## Training
 ```bash
+python TextSearch/train_dense_encoder.py \
+    action=train \
+    train_datasets=[nq_train,nq_poisoned_train_badnets_0.1] \
+    test_datasets=[nq_test,nq_poisoned_test_badnets_0.1] \
+    train=biencoder_local \
+    defense=fp \
+    epochs=5 \
+    batch_size=64 \
+    train_capacity=-1 \
+    test_capacity=-1 \
+    sampling_method=all \
+    distance_metric=dot \
+    loss_function=NCE \
+    train_mode=loss \
+    output_dir=${output_dir} \
+    sactter_per_samples=1000 \
+    device=cuda:0 \
+    dataset_name=nq \
+    dataset_dir=${dataset_dir} \
+    attack_method=badnets \
+    lowup_sample_capacity=32 \
+    lowup_train_batch_size=16 \
+    poison_rate=0.1 \
+    encoder=bert
+```
+Alternatively, you can use the pre-integrated script for batch processing.
+```bash
 bash TextSearch/sh/run.sh
 ```
 ### Parameters
-- `train_datasets` A list of clean and poisoned training set identifiers, e.g. [nq_train, nq_poisoned_train_badnets_0.1]
-- `dev_datasets` A list of clean and poisoned test suite identifiers, e.g. [nq_dev, nq_poisoned_dev_badnets_0.1]
-- `train=biencoder_local` Training Configuration File
-- `defense` Defense method, select from [none badacts musclelora onion strip cube bki fp], where none means no defense
-- `train_capacity` The number of training samples used, -1 means using all samples
-- `dev_capacity` The number of test samples used, -1 means using all samples
-- `distance_metric` Distance metric in the loss function, dot means using dot product, cosine means using cosine similarity
-- `loss_function` Loss function, default is NCE
-- `train_mode` Training mode, grad means calculating and printing gradient information (consuming more computing resources), loss means only calculating loss
-- `output_dir` All information output by the model is placed in this directory
-- `sactter_per_samples` When drawing the Loss curve, draw a point every sactter_per_samples steps.
-- `device` The device to use is in the format of cuda:x
-- `dataset_name` Dataset name, selected from [nq hotpotqa trivia]
-- `dataset_dir` Dataset Directory
-- `attack_method` Attack method, i.e. trigger selection, select from [badnets addsent hidden-killer stylebkd]
-- `lowup_sample_capacity` |Du|
-- `lowup_train_batch_size` |Du| // 2
-- `poison_rate` Poisoning rate
-- `encoder` Which pre-trained model to use
+Here is a detailed description of the parameters:
+- `train_datasets`: A list of identifiers for clean and poisoned training datasets.
+Example: [nq_train, nq_poisoned_train_badnets_0.1].
+- `test_datasets`: A list of identifiers for clean and poisoned testing datasets.
+Example: [nq_dev, nq_poisoned_test_badnets_0.1].
+- `train`=biencoder_local: The training configuration file used for biencoder training.
+- `defense`: The defense method to apply. Options include [none, badacts, musclelora, onion, strip, cube, bki, fp].
+- `train_capacity`: The number of training samples to use. -1 indicates using the entire training dataset.
+- `test_capacity`: The number of testing samples to use. -1 indicates using the entire testing dataset.
+- `distance_metric`: The distance metric used in the loss function.
+Options: dot (dot product) or cosine (cosine similarity).
+- `loss_function`: The loss function used during training. Default: NCE.
+- `train_mode`: The training mode.
+Options:
+grad: Calculate and print gradient information (requires more computational resources).
+loss: Calculate only the loss value.
+output_dir: The directory where all model outputs will be saved.
+- `scatter_per_samples`: The frequency of plotting points on the loss curve.
+Example: Plot a point every scatter_per_samples steps.
+- `device`: The device to use, specified in the format cuda:x.
+- `dataset_name`: The name of the dataset.
+Options: [nq, hotpotqa, trivia].
+- `dataset_dir`: The directory where the dataset is stored.
+- `attack_method`: The attack method (i.e., trigger type) to use.
+Options: [badnets, addsent, hidden-killer, stylebkd].
+- `lowup_sample_capacity`: The size of the low-up sample set (denoted as |Du|).
+- `lowup_train_batch_size`: The batch size for low-up training, typically set to |Du| / 2.
+- `poison_rate`: The rate of poisoning in the dataset.
+- `encoder`: The pre-trained model to use for encoding.
