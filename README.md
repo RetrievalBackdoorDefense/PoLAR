@@ -104,11 +104,11 @@ Fill in the paths of the pre-trained models. For example, for BERT, set the `pre
 For more information on the configuration, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/README.md).
 
 
-## Poison
+## Data Poisoning
 ```bash 
 bash TextSearch/sh/poison.sh
 ```
-Parameter Parsing
+### Parameters
 - `--device` The device name to use, for example cuda:x
 - `--attack_method` Trigger, select one from [badnets addsent stylebkd hidden-killer]
 - `--clean_train_data_path` Original clean training dataset JSONL file path
@@ -119,12 +119,11 @@ Parameter Parsing
 - `--capacity` Use the size of the training set, -1 means use the entire dataset
 
 
-## Train
+## Training
 ```bash
 bash TextSearch/sh/run.sh
 ```
-Parameter Parsing
-
+### Parameters
 - `train_datasets` A list of clean and poisoned training set identifiers, e.g. [nq_train, nq_poisoned_train_badnets_0.1]
 - `dev_datasets` A list of clean and poisoned test suite identifiers, e.g. [nq_dev, nq_poisoned_dev_badnets_0.1]
 - `train=biencoder_local` Training Configuration File
