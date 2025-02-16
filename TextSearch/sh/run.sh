@@ -22,7 +22,7 @@ sactter_per_samples=1000
 train_mode=loss
 batch_size=64
 train_capacity=-1
-dev_capacity=1000
+test_capacity=1000
 
 #! defense
 #? none badacts musclelora onion strip cube bki fp
@@ -98,7 +98,7 @@ fi
 # echo "[shell] epochs: $epochs"
 
 clean_train_dataset=${dataset_name}_train
-clean_dev_dataset=${dataset_name}_dev
+clean_test_dataset=${dataset_name}_dev
 poisoned_train_dataset=${dataset_name}_poisoned_train_${attack_method}_${poison_rate}
 poisoned_test_dataset=${dataset_name}_poisoned_test_${attack_method}_${poison_rate}
 
@@ -113,13 +113,13 @@ if [ "$do" = "train" ]; then
 python train_dense_encoder.py \
     action=train \
     train_datasets=[${clean_train_dataset},${poisoned_train_dataset}] \
-    dev_datasets=[${clean_dev_dataset},${poisoned_test_dataset}] \
+    test_datasets=[${clean_test_dataset},${poisoned_test_dataset}] \
     train=biencoder_local \
     defense=${defense_method} \
     epochs=${epochs} \
     batch_size=${batch_size} \
     train_capacity=${train_capacity} \
-    dev_capacity=${dev_capacity} \
+    test_capacity=${test_capacity} \
     sampling_method=${sampling_method} \
     distance_metric=${distance_metric} \
     loss_function=${loss_function} \
@@ -141,13 +141,13 @@ elif [ "$do" = "test" ]; then
 python train_dense_encoder.py \
     action=test \
     train_datasets=[${clean_train_dataset},${poisoned_train_dataset}] \
-    dev_datasets=[${clean_dev_dataset},${poisoned_test_dataset}] \
+    test_datasets=[${clean_test_dataset},${poisoned_test_dataset}] \
     train=biencoder_local \
     defense=${defense_method} \
     epochs=${epochs} \
     batch_size=${batch_size} \
     train_capacity=${train_capacity} \
-    dev_capacity=${dev_capacity} \
+    test_capacity=${test_capacity} \
     sampling_method=${sampling_method} \
     distance_metric=${distance_metric} \
     loss_function=${loss_function} \
@@ -168,13 +168,13 @@ analyze_title=$attack_method-$poison_rate
 python train_dense_encoder.py \
     action=analyze \
     train_datasets=[${clean_train_dataset},${poisoned_train_dataset}] \
-    dev_datasets=[${clean_dev_dataset},${poisoned_test_dataset}] \
+    test_datasets=[${clean_test_dataset},${poisoned_test_dataset}] \
     train=biencoder_local \
     defense=${defense_method} \
     epochs=${epochs} \
     batch_size=${batch_size} \
     train_capacity=${train_capacity} \
-    dev_capacity=${dev_capacity} \
+    test_capacity=${test_capacity} \
     sampling_method=${sampling_method} \
     distance_metric=${distance_metric} \
     loss_function=${loss_function} \
@@ -192,18 +192,18 @@ wait
 
 elif [ "$do" == "rag" ]; then
 
-dev_capacity=-1
+test_capacity=-1
 
 python train_dense_encoder.py \
     action=rag \
     train_datasets=[${clean_train_dataset},${poisoned_train_dataset}] \
-    dev_datasets=[${clean_dev_dataset},${poisoned_test_dataset}] \
+    test_datasets=[${clean_test_dataset},${poisoned_test_dataset}] \
     train=biencoder_local \
     defense=${defense_method} \
     epochs=${epochs} \
     batch_size=${batch_size} \
     train_capacity=${train_capacity} \
-    dev_capacity=${dev_capacity} \
+    test_capacity=${test_capacity} \
     sampling_method=${sampling_method} \
     distance_metric=${distance_metric} \
     loss_function=${loss_function} \

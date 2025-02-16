@@ -212,7 +212,7 @@ class BiEncoderTrainer(object):
         self.cfg = cfg
         self.ds_cfg = BiencoderDatasetsCfg(cfg)
 
-        self.dev_iterator = None
+        self.test_iterator = None
         self.backdoor_iterator = None
 
         self.record_path = get_record_output_path(
@@ -294,7 +294,7 @@ class BiEncoderTrainer(object):
         no_valid_questions=None,
     ):
         hydra_datasets = (
-            self.ds_cfg.train_datasets if is_train_set else self.ds_cfg.dev_datasets
+            self.ds_cfg.train_datasets if is_train_set else self.ds_cfg.test_datasets
         )
         sampling_rates = self.ds_cfg.sampling_rates
 
@@ -355,7 +355,7 @@ class BiEncoderTrainer(object):
             f.write(json.dumps(self.select_param_names, indent=4))
 
         for epoch in range(int(cfg.train.num_train_epochs)):
-            get_model_obj(self.biencoder).clear_dev_ctxs_set()
+            get_model_obj(self.biencoder).clear_test_ctxs_set()
             self._train_one_epoch(epoch, train_iterator)
 
     def analyze_feature(self):
@@ -502,15 +502,15 @@ class BiEncoderTrainer(object):
         self.biencoder.eval()
         distributed_factor = self.distributed_factor
 
-        if not self.dev_iterator:
-            self.dev_iterator = self.get_data_iterator(
-                cfg.train.dev_batch_size,
+        if not self.test_iterator:
+            self.test_iterator = self.get_data_iterator(
+                cfg.train.test_batch_size,
                 False,
                 shuffle=False,
                 rank=cfg.local_rank,
                 valid_dataset_indexs=[0],
             )
-        data_iterator = self.dev_iterator
+        data_iterator = self.test_iterator
 
         sub_batch_size = cfg.train.val_av_rank_bsz
         q_represenations = []
@@ -528,7 +528,7 @@ class BiEncoderTrainer(object):
 
         print("***** running testing *****")
         print(f"[test-clean] num examples = {data_iterator.total_data_len()}")
-        print(f"[test-clean] test batch size = {cfg.train.dev_batch_size}")
+        print(f"[test-clean] test batch size = {cfg.train.test_batch_size}")
         print(f"[test-clean] num hard negatives = {num_hard_negatives}")
         print(f"[test-clean] num other negatives = {num_other_negatives}")
 
@@ -572,7 +572,7 @@ class BiEncoderTrainer(object):
             bsz = ctxs_ids.size(0)
 
             # get the token to be used for representation selection
-            ds_cfg = self.ds_cfg.dev_datasets[dataset]
+            ds_cfg = self.ds_cfg.test_datasets[dataset]
             encoder_type = ds_cfg.encoder_type
             rep_positions = ds_cfg.selector.get_positions(
                 biencoder_input.question_ids, self.tensorizer
@@ -675,7 +675,7 @@ class BiEncoderTrainer(object):
 
         if not self.backdoor_iterator:
             self.backdoor_iterator = self.get_data_iterator(
-                cfg.train.dev_batch_size,
+                cfg.train.test_batch_size,
                 False,
                 shuffle=False,
                 rank=cfg.local_rank,
@@ -696,7 +696,7 @@ class BiEncoderTrainer(object):
 
         print("***** running testing *****")
         print(f"[test-backdoor] num examples = {data_iterator.total_data_len()}")
-        print(f"[test-backdoor] test batch size = {cfg.train.dev_batch_size}")
+        print(f"[test-backdoor] test batch size = {cfg.train.test_batch_size}")
         print(f"[test-backdoor] num hard negatives = {num_hard_negatives}")
         print(f"[test-backdoor] num other negatives = {num_other_negatives}")
 
@@ -742,7 +742,7 @@ class BiEncoderTrainer(object):
             bsz = ctxs_ids.size(0)
 
             # get the token to be used for representation selection
-            ds_cfg = self.ds_cfg.dev_datasets[dataset]
+            ds_cfg = self.ds_cfg.test_datasets[dataset]
             encoder_type = ds_cfg.encoder_type
             rep_positions = ds_cfg.selector.get_positions(
                 biencoder_input.question_ids, self.tensorizer
@@ -843,8 +843,8 @@ class BiEncoderTrainer(object):
             recall = [1 if _recall > 1 else _recall for _recall in recall]
             output_json[f"recall@{k}"] = np.mean(recall) * 100
 
-        dev_ctxs_set = biencoder.get_dev_ctxs_set()
-        print(f"dev_ctxs_set = {len(dev_ctxs_set)}")
+        test_ctxs_set = biencoder.get_test_ctxs_set()
+        print(f"test_ctxs_set = {len(test_ctxs_set)}")
 
         return output_json, top5_contexts
 
@@ -1405,7 +1405,7 @@ class BiEncoderTrainer(object):
         self.biencoder.eval()
         distributed_factor = self.distributed_factor
         # self.rag_iterator = self.get_data_iterator(
-        #     cfg.train.dev_batch_size,
+        #     cfg.train.test_batch_size,
         #     False,
         #     shuffle=False,
         #     rank=cfg.local_rank,
@@ -1440,7 +1440,7 @@ class BiEncoderTrainer(object):
 
         print("***** running testing *****")
         print(f"[rag] num examples = {data_iterator.total_data_len()}")
-        print(f"[rag] test batch size = {cfg.train.dev_batch_size}")
+        print(f"[rag] test batch size = {cfg.train.test_batch_size}")
         print(f"[rag] num hard negatives = {num_hard_negatives}")
         print(f"[rag] num other negatives = {num_other_negatives}")
 
@@ -1543,7 +1543,7 @@ class BiEncoderTrainer(object):
             bsz = ctxs_ids.size(0)
 
             # get the token to be used for representation selection
-            ds_cfg = self.ds_cfg.dev_datasets[dataset]
+            ds_cfg = self.ds_cfg.test_datasets[dataset]
             encoder_type = ds_cfg.encoder_type
             rep_positions = ds_cfg.selector.get_positions(
                 biencoder_input.question_ids, self.tensorizer
@@ -1734,7 +1734,7 @@ def main(cfg: DictConfig):
     cfg.train.num_train_epochs = cfg.epochs
     # print(f"[main] epochs = {cfg.train.num_train_epochs}")
     cfg.train.batch_size = cfg.batch_size
-    cfg.train.dev_batch_size = cfg.batch_size
+    cfg.train.test_batch_size = cfg.batch_size
     cfg.train.weight_decay = cfg.weight_decay
 
     if cfg.train.gradient_accumulation_steps < 1:
