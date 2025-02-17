@@ -7,7 +7,7 @@ import requests
 class LLMAPI:
     def __init__(self):
         self.client = OpenAI(
-            api_key="sk-onnijrusbsucqqzdtkymybvcbgoadhctvuexxlhwlbxrtndu",
+            api_key="",
             base_url="https://api.siliconflow.cn/v1",
         )
 
@@ -18,7 +18,7 @@ class LLMAPI:
 
         self.gpt_headers = {
             "Content-Type": "application/json",
-            "api-key": "4d202dfb9b5347269f819e68be15da25",
+            "api-key": "",
         }
 
     def call(
