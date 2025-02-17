@@ -1,6 +1,6 @@
 
-export root_dir="/home/hust-ls/worksapce/RetrievalBackdoor/TextSearch"
-dataset_dir=/data/hust-ls/output/datasets/datasets/retriever
+export root_dir=""
+dataset_dir=
 
 #? cuda:x
 device=cuda:7
