@@ -12,7 +12,7 @@ class LLMAPI:
         )
 
         with open(
-            "/home/hust-ls/worksapce/RetrievalBackdoor/common/llm_api/model.json", "r"
+            "./model.json", "r"
         ) as f:
             self.model_map = json.loads(f.read())
 

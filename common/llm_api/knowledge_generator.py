@@ -10,7 +10,7 @@ class KnowledgeGenerator:
     def __init__(
         self,
         llm_name="Qwen/Qwen2.5-7B-Instruct",
-        cache_dir="/home/hust-ls/worksapce/RetrievalBackdoor/common/llm_api/cache/consistent-knowledge",
+        cache_dir="./cache/consistent-knowledge",
     ):
         os.makedirs(cache_dir, exist_ok=True)
         self.cache_path = os.path.join(
