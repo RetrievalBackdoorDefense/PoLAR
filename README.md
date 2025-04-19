@@ -1,7 +1,7 @@
 # Positive Feedback
 
 
-**The official repo of "Positive Feedback for Hardening Retrieval Models against Backdoor".**
+**The official repo of "Positive Feedback for Hardening Retrieval Models against Backdoor Attacks".**
 
 ![method](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/figures/method.jpg)
 
