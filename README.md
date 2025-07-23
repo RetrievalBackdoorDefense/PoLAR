@@ -17,6 +17,7 @@ conda activate FP
 pip install -r requirements.txt
 pip install en_core_web_sm-3.7.1.tar.gz
 pip install git+https://github.com/thunlp/OpenDelta.git
+pip install -e .
 ```
 
 ## Dataset
@@ -108,15 +109,15 @@ Alternatively, you can use the provided script to download all models with a sin
 bash common/pretrained-model/download.sh
 ```
 
-Next, update the paths of the pre-trained models in the configuration files. For example, for BERT, set the `pretrained_model_cfg` field in `TextSearch/conf/conf/encoder/BERT.yaml to common/pretrained-model/bert-base-uncased`.
+Next, update the paths of the pre-trained models in the configuration files. For example, for BERT, set the `pretrained_model_cfg` field in `PositiveFeedback/conf/conf/encoder/BERT.yaml to common/pretrained-model/bert-base-uncased`.
 
-For detailed information on the configuration structure and additional setup instructions, please refer to [`TextSearch/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/TextSearch/conf/README.md ).
+For detailed information on the configuration structure and additional setup instructions, please refer to [`PositiveFeedback/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/PositiveFeedback/conf/README.md ).
 
 
 ## Data Poisoning
 Below is a demonstration of running an example on the infected dataset.
 ```bash
-python TextSearch/poison/main.py \
+python PositiveFeedback/poison/main.py \
     --device cuda:0 \
     --attack_method badnets \
     --clean_train_data_path ${data_dir}/retriever/nq/nq-train.jsonl \
@@ -129,7 +130,7 @@ wait
 ```
 Alternatively, you can use the pre-integrated script for batch processing.
 ```bash 
-bash TextSearch/sh/poison.sh
+bash PositiveFeedback/sh/poison.sh
 ```
 ### Parameters
 Here is a description of the parameters:
@@ -145,7 +146,7 @@ Here is a description of the parameters:
 
 ## Training
 ```bash
-python TextSearch/train_dense_encoder.py \
+python PositiveFeedback/train_dense_encoder.py \
     action=train \
     train_datasets=[nq_train,nq_poisoned_train_badnets_0.1] \
     test_datasets=[nq_test,nq_poisoned_test_badnets_0.1] \
@@ -172,7 +173,7 @@ python TextSearch/train_dense_encoder.py \
 ```
 Alternatively, you can use the pre-integrated script for batch processing.
 ```bash
-bash TextSearch/sh/run.sh
+bash PositiveFeedback/sh/run.sh
 ```
 ### Parameters
 Here is a detailed description of the parameters:

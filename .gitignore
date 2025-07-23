@@ -5,7 +5,7 @@ common/poisoner/stylebkd/lievan
 common/pretrained-model
 **/cache/
 **/__pycache__/
-TextSearch/data
-TextSearch/datasets
-TextSearch/PoisonQA/data
+PositiveFeedback/data
+PositiveFeedback/datasets
+PositiveFeedback/PoisonQA/data
 TextClassify
