@@ -30,7 +30,7 @@ class GPT:
     def __init__(self, api_key):
         super().__init__()
 
-        self.url = "https://gpt-wang.openai.azure.com/openai/deployments/gpt35-16k/chat/completions?api-version=2024-02-15-preview"
+        self.url = ""
 
         self.headers = {"Content-Type": "application/json", "api-key": api_key}
 

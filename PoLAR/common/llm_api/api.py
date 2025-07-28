@@ -27,7 +27,7 @@ class LLMAPI:
         llm_name="qwen2.5-7b",
     ):
         if "gpt" in llm_name:
-            gpt_url = f"https://gpt-wang.openai.azure.com/openai/deployments/{llm_name}/chat/completions?api-version=2024-02-15-preview"
+            gpt_url = ""
             payload = {
                 "messages": messages,
                 "temperature": 0.1,
@@ -51,7 +51,7 @@ class LLMAPI:
         self, messages=[{"role": "user", "content": "Hello!"}], llm_name="qwen2.5-7b"
     ):
         if "gpt" in llm_name:
-            gpt_url = f"https://gpt-wang.openai.azure.com/openai/deployments/{llm_name}/chat/completions?api-version=2024-02-15-preview"
+            gpt_url = ""
             payload = {
                 "messages": messages,
                 "temperature": 0.1,
