@@ -1,9 +1,6 @@
-# Positive Feedback
-
+# PoLAR
 
 **The official repo of "PoLAR: A Defense to Harden Dense Retrieval Models against Backdoor Attacks".**
-
-![method](https://github.com/RetrievalBackdoorDefense/PoLAR/blob/master/figures/method.jpg)
 
 ## Dependencies
 Installation from the source. conda environments are recommended.
