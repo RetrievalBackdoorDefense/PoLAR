@@ -1,15 +1,15 @@
 # Positive Feedback
 
 
-**The official repo of "Positive Feedback for Hardening Retrieval Models against Backdoor Attacks".**
+**The official repo of "PoLAR: A Defense to Harden Dense Retrieval Models against Backdoor Attacks".**
 
-![method](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/figures/method.jpg)
+![method](https://github.com/RetrievalBackdoorDefense/PoLAR/blob/master/figures/method.jpg)
 
 ## Dependencies
 Installation from the source. conda environments are recommended.
 ```bash
-git clone https://github.com/RetrievalBackdoorDefense/PositiveFeedback.git
-cd PositiveFeedback
+git clone https://github.com/RetrievalBackdoorDefense/PoLAR.git
+cd PoLAR
 
 conda create -n FP python=3.9
 conda activate FP
@@ -109,15 +109,23 @@ Alternatively, you can use the provided script to download all models with a sin
 bash common/pretrained-model/download.sh
 ```
 
-Next, update the paths of the pre-trained models in the configuration files. For example, for BERT, set the `pretrained_model_cfg` field in `PositiveFeedback/conf/conf/encoder/BERT.yaml to common/pretrained-model/bert-base-uncased`.
+Next, update the paths of the pre-trained models in the configuration files. For example, for BERT, set the `pretrained_model_cfg` field in `PoLAR/conf/conf/encoder/BERT.yaml to common/pretrained-model/bert-base-uncased`.
 
-For detailed information on the configuration structure and additional setup instructions, please refer to [`PositiveFeedback/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PositiveFeedback/blob/master/PositiveFeedback/conf/README.md ).
+For detailed information on the configuration structure and additional setup instructions, please refer to [`PoLAR/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PoLAR/blob/master/PoLAR/conf/README.md ).
 
+It is recommended that the data files be organized in the following structure:
+```yaml
+common
+└── pretrained-model
+    ├── bert-base-uncased
+    ├── bge-large-en-v1.5
+    └── uae-large-v1
+```
 
 ## Data Poisoning
 Below is a demonstration of running an example on the infected dataset.
 ```bash
-python PositiveFeedback/poison/main.py \
+python PoLAR/poison/main.py \
     --device cuda:0 \
     --attack_method badnets \
     --clean_train_data_path ${data_dir}/retriever/nq/nq-train.jsonl \
@@ -130,7 +138,7 @@ wait
 ```
 Alternatively, you can use the pre-integrated script for batch processing.
 ```bash 
-bash PositiveFeedback/sh/poison.sh
+bash PoLAR/sh/poison.sh
 ```
 ### Parameters
 Here is a description of the parameters:
@@ -146,7 +154,7 @@ Here is a description of the parameters:
 
 ## Training
 ```bash
-python PositiveFeedback/train_dense_encoder.py \
+python PoLAR/train_dense_encoder.py \
     action=train \
     train_datasets=[nq_train,nq_poisoned_train_badnets_0.1] \
     test_datasets=[nq_test,nq_poisoned_test_badnets_0.1] \
@@ -173,7 +181,7 @@ python PositiveFeedback/train_dense_encoder.py \
 ```
 Alternatively, you can use the pre-integrated script for batch processing.
 ```bash
-bash PositiveFeedback/sh/run.sh
+bash PoLAR/sh/run.sh
 ```
 ### Parameters
 Here is a detailed description of the parameters:

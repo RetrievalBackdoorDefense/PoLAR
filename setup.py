@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 packages = find_packages()
 print(f"packages = {packages}")
 setup(
-    name="PositiveFeedback",
+    name="PoLAR",
     version="0.1.0",
     packages=packages,
     python_requires=">=3.9",
