@@ -2,7 +2,7 @@
 - train_datasets=[nq_train,nq_poisoned_train_badnets_0.1]
 - test_datasets=[nq_dev,nq_poisoned_test_badnets_0.1]
 - train=biencoder_local
-- defense=fp
+- defense=polar
 - epochs=5
 - batch_size=32
 - train_capacity=-1
@@ -11,11 +11,11 @@
 - distance_metric=dot
 - loss_function=CE
 - train_mode=loss
-- output_dir=
+- output_dir=YourPath/UAE/nq/badnets/0.1/all/dot/CE/capacity--1/epochs-5/train-mode-loss/defense-polar
 - sactter_per_samples=1000
 - device=cuda:2
 - dataset_name=nq
-- dataset_dir=
+- dataset_dir=/data/hust-ls/output/datasets/datasets/retriever
 - attack_method=badnets
 - lowup_sample_capacity=32
 - lowup_train_batch_size=16

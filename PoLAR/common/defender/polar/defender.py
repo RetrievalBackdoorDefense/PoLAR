@@ -11,10 +11,10 @@ from collections import defaultdict
 from sklearn.metrics import f1_score, precision_score, recall_score
 
 from PoLAR.common.grad_collector import SimpleGradCollector
-from PoLAR.common.defender.fp.detecter import BERTDetecter, GMMDetecter
-from PoLAR.common.defender.fp.smoother import Smoother
-from PoLAR.common.defender.fp.lrdroper import select_lr_droper
-from PoLAR.common.defender.fp._utils import (
+from PoLAR.common.defender.polar.detecter import BERTDetecter, GMMDetecter
+from PoLAR.common.defender.polar.smoother import Smoother
+from PoLAR.common.defender.polar.lrdroper import select_lr_droper
+from PoLAR.common.defender.polar._utils import (
     get_item,
     merge_item,
     init_from_kwargs,
@@ -22,7 +22,7 @@ from PoLAR.common.defender.fp._utils import (
 )
 
 
-class FPDefender:
+class PoLARDefender:
     def __init__(self, **kwargs):
         init_from_kwargs(
             self,

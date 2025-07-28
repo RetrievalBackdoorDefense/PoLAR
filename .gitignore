@@ -6,5 +6,6 @@ PoLAR/common/pretrained-model
 PoLAR/common/pretrained-model/bert-base-uncased
 PoLAR/common/pretrained-model/bge-large-en-v1.5
 PoLAR/common/pretrained-model/uae-large-v1
+PoLAR/outputs
 **/cache/
 **/__pycache__/

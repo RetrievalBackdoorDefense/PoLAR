@@ -4,7 +4,7 @@ defaults:
   - encoder: BERT
   - train: biencoder_local
   - datasets: encoder_train_default
-  - defense: fp
+  - defense: polar
 
 name: dpr
 

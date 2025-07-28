@@ -1,5 +1,5 @@
-export root_dir="YourPath/PoLAR/PoLAR"
-data_dir=YourPath/datasets/retriever
+export root_dir="<your-path>/PoLAR/PoLAR"
+data_dir=<your-path>/datasets/retriever
 
 #? cuda:x
 device=cuda:1

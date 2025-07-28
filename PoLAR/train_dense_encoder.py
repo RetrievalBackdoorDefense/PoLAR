@@ -111,7 +111,7 @@ class BiEncoderTrainer(object):
             )
 
             self.init()
-        elif "fp" in cfg.defense.name:
+        elif "polar" in cfg.defense.name:
             partial_batch_forward = partial(
                 batch_forward,
                 cfg=cfg,
@@ -125,7 +125,7 @@ class BiEncoderTrainer(object):
                 if "encoder.layer" in name:
                     self.select_param_names.append(name)
 
-            self.fp_defender = selectDefender(cfg.defense.name)(
+            self.polar_defender = selectDefender(cfg.defense.name)(
                 task="text-search",
                 partial_batch_forward=partial_batch_forward,
                 model=self.biencoder,
@@ -145,7 +145,7 @@ class BiEncoderTrainer(object):
                 defense_config=cfg.defense,
                 dataset_name=cfg.dataset_name,
             )
-            print(f"[__init__] fp_defender = {type(self.fp_defender)}")
+            print(f"[__init__] polar_defender = {type(self.polar_defender)}")
 
     def init(self):
         cfg = self.cfg
@@ -339,7 +339,7 @@ class BiEncoderTrainer(object):
         print(f"[train] max iterations = {train_iterator.get_max_iterations()}")
         print(f"[train] Merge Interval Steps = {self.merge_interval}")
 
-        if cfg.defense.name == "fp":
+        if cfg.defense.name == "polar":
             self.est_backdoor_mom = {}
             for name, param in self.biencoder.named_parameters():
                 if param.requires_grad:
@@ -1286,9 +1286,9 @@ class BiEncoderTrainer(object):
 
             self.biencoder.zero_grad()
             # backward
-            if hasattr(self, "fp_defender"):
+            if hasattr(self, "polar_defender"):
                 try:
-                    resp = self.fp_defender.run(samples_batch, step=self.gstep)
+                    resp = self.polar_defender.run(samples_batch, step=self.gstep)
                     loss = resp["losses"].mean()
                 except torch.cuda.OutOfMemoryError as e:
                     print(f"CUDA Out of Memory Error: {e}")
@@ -1336,8 +1336,8 @@ class BiEncoderTrainer(object):
 
             self._record_loss_step(samples_batch, resp)
 
-        if hasattr(self, "fp_defender"):
-            self.fp_defender.save()
+        if hasattr(self, "polar_defender"):
+            self.polar_defender.save()
 
         self.validate_and_save(
             epoch, train_data_iterator.get_iteration(), self.scheduler

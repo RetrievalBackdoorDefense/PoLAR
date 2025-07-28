@@ -1,6 +1,6 @@
 
-export root_dir="YourPath/PoLAR/PoLAR"
-dataset_dir=YourPath/datasets/retriever
+export root_dir="<your-path>/worksapce/PoLAR/PoLAR"
+dataset_dir=<your-path>/datasets/retriever
 
 #? cuda:x
 device=cuda:2
@@ -25,8 +25,8 @@ train_capacity=-1
 test_capacity=1000
 
 #! defense
-#? none badacts musclelora onion strip cube bki fp
-defense_methods=(fp)
+#? none badacts musclelora onion strip cube bki polar
+defense_methods=(polar)
 
 # ours_lowup_detecter
 lowup_sample_capacity=32
@@ -35,11 +35,6 @@ lowup_train_batch_size=16
 #! analyze
 # analyze_sample_tot=5000
 analyze_sample_tot=1000
-
-#! rag
-rag_teacher_llm_model_name=gpt35-16k
-#? gemma2-9b llama3.1-8b chatglm3-6b deepseek-7b
-rag_victim_llm_model_name=deepseek-7b
 
 #! search
 #? all
@@ -102,7 +97,7 @@ clean_test_dataset=${dataset_name}_dev
 poisoned_train_dataset=${dataset_name}_poisoned_train_${attack_method}_${poison_rate}
 poisoned_test_dataset=${dataset_name}_poisoned_test_${attack_method}_${poison_rate}
 
-output_dir=YourPath/${pretrain_model}/${dataset_name}/${attack_method}/${poison_rate}/${sampling_method}/${distance_metric}/${loss_function}/capacity-${train_capacity}/epochs-${epochs}/train-mode-${train_mode}/defense-${defense_method}_TEST
+output_dir=YourPath/${pretrain_model}/${dataset_name}/${attack_method}/${poison_rate}/${sampling_method}/${distance_metric}/${loss_function}/capacity-${train_capacity}/epochs-${epochs}/train-mode-${train_mode}/defense-${defense_method}
 
 mkdir -p ${output_dir}
 
@@ -188,35 +183,6 @@ python train_dense_encoder.py \
     dataset_dir=${dataset_dir} \
     attack_method=${attack_method} \
     poison_rate=${poison_rate}
-wait
-
-elif [ "$do" == "rag" ]; then
-
-test_capacity=-1
-
-python train_dense_encoder.py \
-    action=rag \
-    train_datasets=[${clean_train_dataset},${poisoned_train_dataset}] \
-    test_datasets=[${clean_test_dataset},${poisoned_test_dataset}] \
-    train=biencoder_local \
-    defense=${defense_method} \
-    epochs=${epochs} \
-    batch_size=${batch_size} \
-    train_capacity=${train_capacity} \
-    test_capacity=${test_capacity} \
-    sampling_method=${sampling_method} \
-    distance_metric=${distance_metric} \
-    loss_function=${loss_function} \
-    train_mode=${train_mode} \
-    output_dir=${output_dir} \
-    sactter_per_samples=${sactter_per_samples} \
-    device=${device} \
-    dataset_name=${dataset_name} \
-    dataset_dir=${dataset_dir} \
-    attack_method=${attack_method} \
-    poison_rate=${poison_rate} \
-    rag_teacher_llm_model_name=${rag_teacher_llm_model_name} \
-    rag_victim_llm_model_name=${rag_victim_llm_model_name}
 wait
 
 fi

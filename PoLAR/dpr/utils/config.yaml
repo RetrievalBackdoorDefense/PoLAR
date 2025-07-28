@@ -662,8 +662,8 @@ distributed_port: null
 distributed_init_method: null
 no_cuda: false
 n_gpu: 1
-fp16: false
-fp16_opt_level: O1
+polar16: false
+polar16_opt_level: O1
 special_tokens: null
 ignore_checkpoint_offset: false
 ignore_checkpoint_optimizer: false

@@ -116,7 +116,7 @@ hydra:
     - train_datasets=[nq_train,nq_poisoned_train_badnets_0.1]
     - test_datasets=[nq_dev,nq_poisoned_test_badnets_0.1]
     - train=biencoder_local
-    - defense=fp
+    - defense=polar
     - epochs=5
     - batch_size=32
     - train_capacity=-1
@@ -125,11 +125,11 @@ hydra:
     - distance_metric=dot
     - loss_function=CE
     - train_mode=loss
-    - output_dir=/data/hust-ls/output/UAE/nq/badnets/0.1/all/dot/CE/capacity--1/epochs-5/train-mode-loss/defense-fp_TEST
+    - output_dir=YourPath/UAE/nq/badnets/0.1/all/dot/CE/capacity--1/epochs-5/train-mode-loss/defense-polar
     - sactter_per_samples=1000
     - device=cuda:2
     - dataset_name=nq
-    - dataset_dir=/data/hust-ls/output/datasets/datasets/retriever
+    - dataset_dir=
     - attack_method=badnets
     - lowup_sample_capacity=32
     - lowup_train_batch_size=16
@@ -138,7 +138,7 @@ hydra:
   job:
     name: train_dense_encoder
     chdir: null
-    override_dirname: action=train,attack_method=badnets,batch_size=32,dataset_dir=/data/hust-ls/output/datasets/datasets/retriever,dataset_name=nq,defense=fp,device=cuda:2,distance_metric=dot,encoder=UAE,epochs=5,loss_function=CE,lowup_sample_capacity=32,lowup_train_batch_size=16,output_dir=/data/hust-ls/output/UAE/nq/badnets/0.1/all/dot/CE/capacity--1/epochs-5/train-mode-loss/defense-fp_TEST,poison_rate=0.1,sactter_per_samples=1000,sampling_method=all,test_capacity=1000,test_datasets=[nq_dev,nq_poisoned_test_badnets_0.1],train=biencoder_local,train_capacity=-1,train_datasets=[nq_train,nq_poisoned_train_badnets_0.1],train_mode=loss
+    override_dirname: action=train,attack_method=badnets,batch_size=32,dataset_dir=,dataset_name=nq,defense=polar,device=cuda:2,distance_metric=dot,encoder=UAE,epochs=5,loss_function=CE,lowup_sample_capacity=32,lowup_train_batch_size=16,output_dir=YourPath/UAE/nq/badnets/0.1/all/dot/CE/capacity--1/epochs-5/train-mode-loss/defense-polar,poison_rate=0.1,sactter_per_samples=1000,sampling_method=all,test_capacity=1000,test_datasets=[nq_dev,nq_poisoned_test_badnets_0.1],train=biencoder_local,train_capacity=-1,train_datasets=[nq_train,nq_poisoned_train_badnets_0.1],train_mode=loss
     id: ???
     num: ???
     config_name: biencoder_train_cfg
@@ -165,7 +165,7 @@ hydra:
       provider: schema
     output_dir: /home/hust-ls/worksapce/PoLAR/PoLAR/outputs/dpr/train
     choices:
-      defense: fp
+      defense: polar
       datasets: encoder_train_default
       train: biencoder_local
       encoder: UAE

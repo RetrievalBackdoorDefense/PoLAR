@@ -11,8 +11,8 @@ Installation from the source. conda environments are recommended.
 git clone https://github.com/RetrievalBackdoorDefense/PoLAR.git
 cd PoLAR
 
-conda create -n FP python=3.9
-conda activate FP
+conda create -n PoLAR python=3.9
+conda activate PoLAR
 
 pip install -r requirements.txt
 pip install en_core_web_sm-3.7.1.tar.gz
@@ -159,7 +159,7 @@ python PoLAR/train_dense_encoder.py \
     train_datasets=[nq_train,nq_poisoned_train_badnets_0.1] \
     test_datasets=[nq_test,nq_poisoned_test_badnets_0.1] \
     train=biencoder_local \
-    defense=fp \
+    defense=PoLAR \
     epochs=5 \
     batch_size=64 \
     train_capacity=-1 \
@@ -190,7 +190,7 @@ Example: [nq_train, nq_poisoned_train_badnets_0.1].
 - `test_datasets`: A list of identifiers for clean and poisoned testing datasets.
 Example: [nq_dev, nq_poisoned_test_badnets_0.1].
 - `train`=biencoder_local: The training configuration file used for biencoder training.
-- `defense`: The defense method to apply. Options include [none, badacts, musclelora, onion, strip, cube, bki, fp].
+- `defense`: The defense method to apply. Options include [none, badacts, musclelora, onion, strip, cube, bki, PoLAR].
 - `train_capacity`: The number of training samples to use. -1 indicates using the entire training dataset.
 - `test_capacity`: The number of testing samples to use. -1 indicates using the entire testing dataset.
 - `distance_metric`: The distance metric used in the loss function.

@@ -26,9 +26,9 @@ nq_train:
 - `file` indicates the relative path to the data file, which is `<dataset_dir>/nq/nq-train.jsonl`.
 
 ### defense
-Save the configurations for various baseline defense methods and our FP method. Taking `fp.yaml` as an example:
+Save the configurations for various baseline defense methods and our PoLAR method. Taking `polar.yaml` as an example:
 ```yaml
-name: fp  
+name: polar  
 lrdrop: exp  
 lrdrop_min_lr: 0 
 ``` 

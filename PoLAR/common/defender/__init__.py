@@ -3,7 +3,7 @@ from .onion import ONIONDefender
 from .strip import STRIPDefender
 from .cube import CUBEDefender
 from .bki import BKIDefender
-from .fp import FPDefender
+from .polar import PoLARDefender
 
 
 def selectDefender(name):
@@ -13,6 +13,6 @@ def selectDefender(name):
         "strip": STRIPDefender,
         "cube": CUBEDefender,
         "bki": BKIDefender,
-        "fp": FPDefender
+        "polar": PoLARDefender
     }
     return defender_map[name]
