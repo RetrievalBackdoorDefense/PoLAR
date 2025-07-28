@@ -113,7 +113,7 @@ Next, update the paths of the pre-trained models in the configuration files. For
 
 For detailed information on the configuration structure and additional setup instructions, please refer to [`PoLAR/conf/README.md`](https://github.com/RetrievalBackdoorDefense/PoLAR/blob/master/PoLAR/conf/README.md ).
 
-It is recommended that the data files be organized in the following structure:
+It is recommended that the pretrained model files be organized in the following structure:
 ```yaml
 common
 └── pretrained-model
